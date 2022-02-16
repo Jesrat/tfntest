@@ -2,11 +2,15 @@ from .filters import CustomerFilterBackend
 from .serializers import CustomerSerializer, CustomerAddressSerializer, CustomerDocumentSerializer
 from crm.models import Customer, CustomerAddress, CustomerDocument
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-# Create your views here.
+
+class LoginAPIView(ObtainAuthToken):
+    pass
+
 class CustomerViewset(ModelViewSet):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]

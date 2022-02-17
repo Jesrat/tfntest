@@ -10,17 +10,28 @@ This is  project developed on django to complete developer test required for dev
 
 
 # Instalation: <a name="instalation"></a>
-to instalate the software good practice of python virtual environment must be followed,
-once the virtual environment has been setted up execute:
+To instalate the software good practice of python virtual environment should be followed, and python should be installed 
+on the host machine, in order to download python please refer to their home page for [download](https://www.python.org/downloads/).
+
+To create the virtual environment for isolate all project libraries from the ones that already exists on the host machine
+please follow the official [documentation](https://docs.python.org/3/library/venv.html).
+
+Once the virtual environment has been setted up execute on the working dir:
 ```shell
-# this will install all the required libraries for the software
+# this command will fetch all the project files
+$ git clone https://github.com/Jesrat/tfntest.git
+
+# this command will install all the required libraries for the project
 $ pip install -r requirements
 
-# this command will create the needed tables, indexes and relations on database
+# this command will create the required tables, indexes and relations on database
 $ python manage.py migrate
 
 # this command will populate tables with basic dummy data
 $ python manage.py shell < setup.py
+
+# this command will run the builtin webserver from django
+$ python manage.py runserver 0:8000
 ```
 
 # API Docs: <a name="api_docs"></a>
@@ -31,7 +42,7 @@ which includes request and response examples with their methods and status codes
 # Audit: <a name="audit"></a>
 Since a requirement about auditing was included on details, 
 a sql Oracle type file containing a table and a trigger creation is provided, 
-this was made this way because the database used for development was sqlite.
+it was made this way because the database used for development was sqlite.
 
 # Reporting: <a name="reporting"></a>
 A report tool was provided to extract documents or address data:

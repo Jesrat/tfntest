@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 super_user_exists = get_user_model().objects.filter(is_superuser=True).exists()
 print(f'super user already exists? {super_user_exists}')
 if not super_user_exists:
-    print(f'creating superuser WEBAPP')
+    print(f'creating superuser webapp')
     get_user_model().objects.create_superuser('webapp', 'jgomez@jesrat.com', '1234')
-    print(f'superuser WEBAPP created pass is 1234, we strongly advice to change password on first login')
+    print(f'superuser webapp created pass is 1234, we strongly advice to change password on first login')
 
 if not Customer.objects.all().count():
     data = [

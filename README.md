@@ -1,6 +1,6 @@
 # TFNTEST
 
-This is  project developed on django to complete developer test required for dev and ops teams.
+This project was developed on django to complete developer test required for dev and ops teams.
 
 ## Table of Contents
 * [instalation](#instalation)
@@ -16,7 +16,7 @@ on the host machine, in order to download python please refer to their home page
 To create the virtual environment for isolate all project libraries from the ones that already exists on the host machine
 please follow the official [documentation](https://docs.python.org/3/library/venv.html).
 
-Once the virtual environment has been setted up execute on the working dir:
+Once the virtual environment has been setted up execute the following commands on the chosen working dir:
 ```shell
 # this command will fetch all the project files
 $ git clone https://github.com/Jesrat/tfntest.git
@@ -37,11 +37,11 @@ $ python manage.py runserver 0:8000
 # API Docs: <a name="api_docs"></a>
 For your convenience a documentation for each endpoint of the API is provided on the following 
 [link](https://documenter.getpostman.com/view/11257528/UVkiRdR6). This is a link to Postman like documentation 
-which includes request and response examples with their methods and status codes.
+which includes request and response examples with all their methods and status codes.
 
 # Audit: <a name="audit"></a>
 Since a requirement about auditing was included on details, 
-a sql Oracle type file containing a table and a trigger creation is provided, 
+an Oracle type sql file containing the creation of an audit table and creation of all needed triggers is provided, 
 it was made this way because the database used for development was sqlite.
 
 # Reporting: <a name="reporting"></a>

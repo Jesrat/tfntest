@@ -1,0 +1,147 @@
+{% extends "core/base.html" %}
+{% load static html_inputs %}
+{% block head %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static 'core/css/atlantis.css' %}">
+<style>
+    .page-item.active .page-link {
+        color: white !important;
+    }
+    .dataTables_wrapper {
+        overflow-x: scroll;
+    }
+</style>
+{% endblock head %}
+{% block content %}
+<div class="panel-header bg-primary-gradient">
+    <div class="page-inner py-5">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+            <div>
+                <h2 class="text-white pb-2 fw-bold">{{ model_meta.verbose_name_plural }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-inner mt--5">
+    <div class="row mt--2">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div id="spinner-overlay" class="w-100 h-100 justify-content-center align-items-center position-absolute" style="background-color: white; z-index: 100; opacity: 0.6; display: none;">
+                        <div class="spinner-border text-danger" role="status">
+                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading..n.</span>
+                        </div>
+                    </div>
+                    {% add_object_button %}
+                    <table id="model-table" class="table table-striped table-bordered" style="width:100%">
+                        {% datatables_thead %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script>
+
+const headers =  {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Authorization': 'Token {{ request.user.auth_token.key }}'
+}
+
+$(document).ready( function () {
+    $('#model-table').DataTable({
+        "serverSide": true,
+        "processing": true,
+        "ajax": {
+            "url": "{% datatables_endpoint %}?format=datatables",
+            headers: headers,
+        },
+        "columns": [
+            {% datatables_columns %}
+        ],
+        "language": {
+            "processing": '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading..n.</span>'
+        }
+    });
+} );
+let perform_delete = (endpoint) => {
+    return fetch(endpoint, {
+        method: 'DELETE',
+        headers: headers
+    })
+    .then(response => {
+        if (response.ok) {
+            return Promise.resolve();
+        }else {
+            return response.json()
+        }
+    })
+}
+
+
+document.addEventListener('click', e => {
+    if (e.target.classList.contains('delete-item')){
+        deleteItem(e);
+    }
+});
+
+
+let deleteItem = (e) => {
+    e.preventDefault();
+    let endpoint = e.target.href;
+    let tr = e.target.parentNode.parentNode;
+    console.log('href: ', endpoint);
+    if (!endpoint){
+        console.log(e);
+        if (e.target.nodeName == "I"){
+            endpoint = e.target.parentNode.href;
+            tr = e.target.parentNode.parentNode.parentNode;
+            console.log('new href: ', endpoint);
+        }else{
+            return;
+        }
+    }
+    swal({
+        title: 'Are you sure?',
+        text: "You want to delete this item and all its info related? won't be able to revert this!",
+        type: 'warning',
+        buttons:{
+            confirm: {
+                text : 'Yes, delete it!',
+                className : 'btn btn-success'
+            },
+            cancel: {
+                visible: true,
+                className: 'btn btn-danger'
+            }
+        }
+    })
+    .then(Delete => {
+        if (Delete) {
+            let spinner = document.getElementById('spinner-overlay');
+            spinner.style.display = 'flex';
+            perform_delete(endpoint).then(error => {
+                spinner.style.display = 'none';
+                if (error) {
+                    notify(error.detail, 'danger');
+                }else{
+                    notify('object deleted', 'success');
+                    tr.parentNode.removeChild(tr);
+                }
+            })
+        } else {
+            swal.close();
+        }
+    })
+    .catch(err => {
+        notify(data.detail, 'oops there was a problem while trying to delete object');
+    });
+}
+</script>
+{% endblock script %}

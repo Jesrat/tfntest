@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+{% load static i18n %}
+<html lang="en">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>Telefonica | CRM</title>
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+
+	<link rel="icon" href="{% static 'core/img/icon.ico' %}" type="image/x-icon"/>
+
+	<!-- Fonts and icons -->
+	<script src="{% static 'core/js/plugin/webfont/webfont.min.js' %}"></script>
+	<script>
+		WebFont.load({
+			google: {"families":["Lato:300,400,700,900"]},
+			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['{% static 'core/css/fonts.min.css' %}']},
+			active: function() {
+				sessionStorage.fonts = true;
+			}
+		});
+	</script>
+
+	<!-- CSS Files -->
+	<link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'core/css/atlantis.min.css' %}">
+
+	<!-- CSS Just for demo purpose, don't include it in your project -->
+	<link rel="stylesheet" href="{% static 'core/css/demo.css' %}">
+	{% block head %}{% endblock head %}
+</head>
+<body>
+	<div class="wrapper">
+		<div class="main-header">
+			{% if request.user.is_authenticated %}
+			<!-- Logo Header -->
+			<div class="logo-header" data-background-color="blue">
+				<a href="{% url 'crm:dashboard' %}" class="logo text-white">Telefonica</a>
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">
+						<i class="icon-menu"></i>
+					</span>
+				</button>
+				<button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
+				<div class="nav-toggle">
+					<button class="btn btn-toggle toggle-sidebar">
+						<i class="icon-menu"></i>
+					</button>
+				</div>
+			</div>
+			<!-- End Logo Header -->
+
+			<!-- Navbar Header -->
+			<nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue2">
+
+				<div class="container-fluid">
+					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+						<li class="nav-item toggle-nav-search hidden-caret">
+							<a class="nav-link" data-toggle="collapse" href="#search-nav" role="button" aria-expanded="false" aria-controls="search-nav">
+								<i class="fa fa-search"></i>
+							</a>
+						</li>
+
+						<li class="nav-item dropdown hidden-caret">
+							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+								<div class="avatar-sm">
+									<img src="{{ request.user.image.url }}" alt="..." class="avatar-img rounded-circle">
+								</div>
+							</a>
+							<ul class="dropdown-menu dropdown-user animated fadeIn">
+								<div class="dropdown-user-scroll scrollbar-outer">
+									<li>
+										<div class="user-box">
+											<div class="avatar-lg"><img src="{{ request.user.image.url }}" alt="image profile" class="avatar-img rounded"></div>
+											<div class="u-text">
+												<h4>{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+												<p class="text-muted">{{ request.user.email }}</p>
+											</div>
+										</div>
+									</li>
+									<li>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+									</li>
+								</div>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			<!-- End Navbar -->
+			{% endif %}
+		</div>
+
+		{% if request.user.is_authenticated %}
+		<!-- Sidebar -->
+		<div class="sidebar sidebar-style-2">
+			<div class="sidebar-wrapper scrollbar scrollbar-inner">
+				<div class="sidebar-content">
+                    <ul class="nav nav-primary">
+						<li class="nav-section">
+							<span class="sidebar-mini-icon">
+								<i class="fa fa-ellipsis-h"></i>
+							</span>
+						</li>
+                        <li class="nav-item" id="crm-nav">
+							<a data-toggle="collapse" href="#crm">
+								<i class="fas fa-user"></i>
+								<p>{% trans 'CRM' %}</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="crm">
+								<ul class="nav nav-collapse">
+									<li id="crmCustomer">
+										<a href="{% url 'crm:customer-list' %}">
+											<span class="sub-item">{% trans 'Customers' %}</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+                    </ul>
+				</div>
+			</div>
+		</div>
+		<!-- End Sidebar -->
+		{% endif %}
+
+		<div class="main-panel">
+			<div class="content">
+				{% block content%}{% endblock content %}
+			</div>
+			<footer class="footer">
+				<div class="container-fluid">
+					<div class="copyright ml-auto">
+						2022, TELEFONICA MOVILES EL SALVADOR S.A. de C.V.
+					</div>
+				</div>
+			</footer>
+		</div>
+	</div>
+	<!--   Core JS Files   -->
+	<script src="{% static 'core/js/core/jquery.3.2.1.min.js' %}"></script>
+	<script src="{% static 'core/js/core/popper.min.js' %}"></script>
+	<script src="{% static 'core/js/core/bootstrap.min.js' %}"></script>
+
+	<!-- jQuery UI -->
+	<script src="{% static 'core/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+	<script src="{% static 'core/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js' %}"></script>
+
+	<!-- jQuery Scrollbar -->
+	<script src="{% static 'core/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+
+
+	<!-- Chart JS -->
+	<script src="{% static 'core/js/plugin/chart.js/chart.min.js' %}"></script>
+
+	<!-- jQuery Sparkline -->
+	<script src="{% static 'core/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+
+	<!-- Chart Circle -->
+	<script src="{% static 'core/js/plugin/chart-circle/circles.min.js' %}"></script>
+
+	<!-- Datatables -->
+	<script src="{% static 'core/js/plugin/datatables/datatables.min.js' %}"></script>
+
+	<!-- Bootstrap Notify -->
+	<script src="{% static 'core/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+
+	<!-- jQuery Vector Maps -->
+	<script src="{% static 'core/js/plugin/jqvmap/jquery.vmap.min.js' %}"></script>
+	<script src="{% static 'core/js/plugin/jqvmap/maps/jquery.vmap.world.js' %}"></script>
+
+	<!-- Sweet Alert -->
+	<script src="{% static 'core/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
+
+	<!-- Atlantis JS -->
+	<script src="{% static 'core/js/atlantis.min.js' %}"></script>
+
+	{% if request.user.is_authenticated %}
+	<script>
+		var nav_group_name = '{{ nav_group_name }}';
+		var nav_group_item = '{{ nav_group_name }}{{ nav_group_item }}';
+        document.querySelector('#' + nav_group_item).classList.add('active');
+        document.querySelector('#' + nav_group_name).classList.add('show');
+        document.querySelector('#' + nav_group_name + '-nav').classList.add('active');
+        document.querySelector('#' + nav_group_name + '-nav').classList.add('submenu');
+
+		function notify(body, level){
+			let content = {title: '', message: body, icon: 'fa fa-bell', url: '#', target: '_blank'};
+			$.notify(content,{
+				type: level,
+				allow_dismiss: true,
+				showProgressbar: true,
+				placement: {from: "top", align: "center"},
+				time: 1000,
+				delay: 1000,
+				template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+					'<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+					'<span data-notify="icon"></span> ' +
+					'<span data-notify="message">{2}</span>' +
+					'<div class="progress" data-notify="progressbar">' +
+						'<div class="progress-bar bg-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+					'</div>' +
+					'<a href="{3}" target="{4}" data-notify="url"></a>' +
+				'</div>'
+			});
+		}
+
+		{% for message in messages %}
+			notify('{{ message }}', '{{ message.tags }}');
+		{% endfor %}
+	</script>
+	{% block script %}{% endblock script %}
+	{% endif %}
+</body>
+</html>

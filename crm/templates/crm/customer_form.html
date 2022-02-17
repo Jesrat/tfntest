@@ -1,0 +1,137 @@
+{% extends "core/base.html" %}
+{% load i18n static %}
+{% block head %}
+<link href="{% static 'core/plugins/chosen/chosen.min.css' %}" rel="stylesheet">
+<link href="{% static 'core/plugins/bootstrap-datepicker/bootstrap-datepicker.css' %}" rel="stylesheet">
+{% endblock head %}
+{% block content %}
+<div class="page-inner">
+<!--Page content-->
+<!--===================================================-->
+    <div class="row">
+        <div class="col-xs-12 col-md-8 ml-auto mr-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ submit }} {{ model_meta.verbose_name }}</h3>
+                </div>
+                <!--Horizontal Form-->
+                <!--===================================================-->
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        {% if form.non_field_errors %}
+                        <div class="form-row text-danger text-center">
+                            <ul class="list-unstyled">
+                            {% for error in form.non_field_errors %}
+                                <li class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        {% for field in form.visible_fields %}
+                        <div class="form-group {% if field.errors %}has-error{% endif %}">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% if field.errors %}
+                            <ul class="list-unstyled">
+                                {% for error in field.errors %}
+                                <li class="text-danger">{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            {{ field }}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        </div>
+                        {% endfor %}
+                        <hr>
+                        <div id="documents-wrapper">
+                        {% for document_form in document_forms %}
+                            <div class="form-group">
+                                <!-- todo: fix delete of this motive-->
+                                <label >{%  trans 'Document:' %}</label>
+                                <div class="col-sm-12">
+                                    <button type="button" class="btn btn-sm btn-danger m-1" style="float: right; margin-top: 3px;" onclick="removeElem(this)">{% trans 'remove' %}</button>
+                                    <div>{{ document_form.document_type }}</div>
+                                    <br>
+                                    <div>{{ document_form.document }}</div>
+                                    {{ document_form.id_document }}
+                                </div>
+                            </div>
+                        {% endfor%}
+                        </div>
+                        <div class="text-center">
+                            <p class="btn btn-sm btn-success" id="add-document">{%  trans 'Add Document' %}</p>
+                        </div>
+                        <hr>
+                        <div id="addresses-wrapper">
+                        {% for address_form in address_forms %}
+                            <div class="form-group">
+                                <!-- todo: fix delete of this motive-->
+                                <label >{%  trans 'Address:' %}</label>
+                                <div class="col-sm-12">
+                                    <button type="button" class="btn btn-sm btn-danger m-1" style="float: right; margin-top: 3px;" onclick="removeElem(this)">{% trans 'remove' %}</button>
+                                    <div>{{ address_form.address_type }}</div>
+                                    <br>
+                                    <div>{{ address_form.address }}</div>
+                                    {{ address_form.id_address }}
+                                </div>
+                            </div>
+                        {% endfor%}
+                        </div>
+                        <div class="text-center">
+                            <p class="btn btn-sm btn-success" id="add-address">{%  trans 'Add Address' %}</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <div class="text-center">
+                            <button class="btn btn-info" type="submit">{{ submit }}</button>
+                        </div>
+                    </div>
+                </form>
+                <!--===================================================-->
+                <!--End Horizontal Form-->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+<script src="{% static 'core/plugins/chosen/chosen.jquery.min.js' %}"></script>
+<script src="{% static 'core/plugins/switchery/switchery.min.js' %}"></script>
+<script src="{% static 'core/plugins/bootstrap-select/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'core/plugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('.chosen-select').chosen({width: "100%"});
+        document.querySelectorAll("input[type='checkbox']").forEach(input => {
+            new Switchery(input);
+        });
+        $('.date').datepicker({autoclose:true});
+    });
+    let address = `
+        <div class="form-group">
+           <label class="col-sm-3 control-label" for="{{ address_blank_form.message.id_address }}">{% trans 'Address:' %}</label>
+           <div class="col-sm-12">
+                <button type="button" class="btn btn-sm btn-danger m-1 float-right" style="float: right; margin-top: 3px;" onclick="removeElem(this)">{% trans 'remove' %}</button>
+               <div>{{ address_blank_form.address_type }}</div>
+                <br>
+                <div>{{ address_blank_form.address }}</div>
+           </div>
+        </div>`
+    $('#add-address').on('click', function(){$('#addresses-wrapper').append(address)})
+    let customer_document = `
+        <div class="form-group">
+           <label class="col-sm-3 control-label" for="{{ document_blank_form.message.id_document }}">{% trans 'Document:' %}</label>
+           <div class="col-sm-12">
+                <button type="button" class="btn btn-sm btn-danger m-1 float-right" style="float: right; margin-top: 3px;" onclick="removeElem(this)">{% trans 'remove' %}</button>
+               <div>{{ document_blank_form.document_type }}</div>
+                <br>
+                <div>{{ document_blank_form.document }}</div>
+           </div>
+        </div>`
+    $('#add-document').on('click', function(){$('#documents-wrapper').append(customer_document)})
+    function removeElem(elem){
+        form = elem.parentNode.parentNode;
+        form.parentNode.removeChild(form);
+    }
+</script>
+{% endblock script %}
